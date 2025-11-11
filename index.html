@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Reminder - 100% Free</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .free-badge {
+            display: inline-block;
+            background: #00ff88;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .trust-section {
+            background: #f0f9ff;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .trust-section p {
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-share {
+            background: #00c853;
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .btn-delete {
+            background: #ff4444;
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .reminders-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .reminder-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .reminder-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .reminder-card.urgent {
+            border-color: #ff4444;
+            background: #fff5f5;
+        }
+
+        .reminder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .reminder-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .reminder-time {
+            font-size: 1.1em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .countdown {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .countdown.urgent {
+            color: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .reminder-message {
+            color: #666;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .reminder-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .donation-section {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .donation-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .donation-section p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .btn-donate {
+            background: #0070ba;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-donate:hover {
+            background: #005a94;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state img {
+            width: 150px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Date Reminder</h1>
+            <p>Never forget important dates again!</p>
+            <span class="free-badge">✓ 100% FREE FOREVER</span>
+        </div>
+
+        <div class="trust-section">
+            <p>✓ No Registration Required • ✓ No Hidden Fees • ✓ Your Data Stays Private • ✓ Works Offline</p>
+        </div>
+
+        <div class="content">
+            <div class="form-section">
+                <h2 style="margin-bottom: 20px;">Create New Reminder</h2>
+                <form id="reminderForm">
+                    <div class="form-group">
+                        <label for="title">Event Title *</label>
+                        <input type="text" id="title" required placeholder="e.g., Mom's Birthday">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="datetime">Date & Time *</label>
+                        <input type="datetime-local" id="datetime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Personal Message</label>
+                        <textarea id="message" placeholder="Add a special message..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">➕ Add Reminder</button>
+                </form>
+            </div>
+
+            <div id="remindersList" class="reminders-list">
+                <div class="empty-state">
+                    <h3>No reminders yet!</h3>
+                    <p>Create your first reminder above to get started.</p>
+                </div>
+            </div>
+
+            <div class="donation-section">
+                <h3>☕ Enjoying This Free App?</h3>
+                <p>If you find this helpful, buy me a cup of tea! ❤️</p>
+                <a href="https://paypal.me/NoorDevloper2025" target="_blank" class="btn-donate">
+                    Buy Me a Cup of Tea ☕
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+        let notifiedReminders = new Set(JSON.parse(localStorage.getItem('notified')) || []);
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Loud alarm sound using Web Audio API
+        let audioContext;
+        let oscillator;
+        let gainNode;
+
+        function playAlarm() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800;
+            oscillator.type = 'square';
+            gainNode.gain.value = 0.3;
+
+            oscillator.start();
+            
+            // Alternate frequency for alarm effect
+            let freq = 800;
+            const interval = setInterval(() => {
+                freq = freq === 800 ? 1000 : 800;
+                oscillator.frequency.value = freq;
+            }, 200);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                oscillator.stop();
+            }, 3000);
+        }
+
+        function showNotification(reminder) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                playAlarm();
+                const notification = new Notification('⏰ Reminder Alert!', {
+                    body: `${reminder.title}\n${reminder.message || 'Time for your event!'}`,
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">📅</text></svg>',
+                    requireInteraction: true,
+                    tag: reminder.id
+                });
+
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                };
+            }
+        }
+
+        function checkReminders() {
+            const now = new Date().getTime();
+            reminders.forEach(reminder => {
+                const reminderTime = new Date(reminder.datetime).getTime();
+                const timeDiff = reminderTime - now;
+
+                if (timeDiff <= 0 && timeDiff > -60000 && !notifiedReminders.has(reminder.id)) {
+                    showNotification(reminder);
+                    notifiedReminders.add(reminder.id);
+                    localStorage.setItem('notified', JSON.stringify([...notifiedReminders]));
+                }
+            });
+        }
+
+        setInterval(checkReminders, 10000);
+        checkReminders();
+
+        document.getElementById('reminderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const reminder = {
+                id: Date.now().toString(),
+                title: document.getElementById('title').value,
+                datetime: document.getElementById('datetime').value,
+                message: document.getElementById('message').value,
+                created: new Date().toISOString()
+            };
+
+            reminders.push(reminder);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            
+            e.target.reset();
+            renderReminders();
+            alert('✅ Reminder added successfully!');
+        });
+
+        function getCountdown(datetime) {
+            const now = new Date().getTime();
+            const target = new Date(datetime).getTime();
+            const diff = target - now;
+
+            if (diff < 0) return 'Expired';
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (days > 0) return `${days}d ${hours}h ${minutes}m`;
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
+        }
+
+        function shareReminder(reminder) {
+            const text = `📅 Reminder: ${reminder.title}\n⏰ ${new Date(reminder.datetime).toLocaleString()}\n${reminder.message ? '💬 ' + reminder.message : ''}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: reminder.title,
+                    text: text
+                });
+            } else {
+                navigator.clipboard.writeText(text);
+                alert('✅ Reminder copied to clipboard!');
+            }
+        }
+
+        function deleteReminder(id) {
+            if (confirm('Are you sure you want to delete this reminder?')) {
+                reminders = reminders.filter(r => r.id !== id);
+                localStorage.setItem('reminders', JSON.stringify(reminders));
+                notifiedReminders.delete(id);
+                localStorage.setItem('notified', JSON.stringify([...notifiedReminders]));
+                renderReminders();
+            }
+        }
+
+        function filterReminders(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            renderReminders();
+        }
+
+        function renderReminders() {
+            const now = new Date().getTime();
+            let filtered = reminders;
+
+            filtered.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+            const list = document.getElementById('remindersList');
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state"><h3>No reminders yet!</h3><p>Create your first reminder above to get started.</p></div>';
+                return;
+            }
+
+            list.innerHTML = filtered.map(reminder => {
+                const countdown = getCountdown(reminder.datetime);
+                const isUrgent = new Date(reminder.datetime).getTime() - now < 3600000;
+                
+                return `
+                    <div class="reminder-card ${isUrgent && countdown !== 'Expired' ? 'urgent' : ''}">
+                        <div class="reminder-header">
+                            <div>
+                                <div class="reminder-title">${reminder.title}</div>
+                                <div class="reminder-time">📅 ${new Date(reminder.datetime).toLocaleString()}</div>
+                                <div class="countdown ${isUrgent && countdown !== 'Expired' ? 'urgent' : ''}">
+                                    ⏱️ ${countdown}
+                                </div>
+                            </div>
+                        </div>
+                        ${reminder.message ? `<div class="reminder-message">💬 ${reminder.message}</div>` : ''}
+                        <div class="reminder-actions">
+                            <button class="btn btn-share" onclick="shareReminder(${JSON.stringify(reminder).replace(/"/g, '&quot;')})">📤 Share</button>
+                            <button class="btn btn-delete" onclick="deleteReminder('${reminder.id}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        setInterval(renderReminders, 30000);
+        renderReminders();
+
+        // Set minimum datetime to now
+        document.getElementById('datetime').min = new Date().toISOString().slice(0, 16);
+    </script>
+</body>
+</html>
