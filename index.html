@@ -1,538 +1,483 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Reminder - 100% Free</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .free-badge {
-            display: inline-block;
-            background: #00ff88;
-            color: #000;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-
-        .trust-section {
-            background: #f0f9ff;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .trust-section p {
-            color: #333;
-            font-size: 0.95em;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        .form-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-share {
-            background: #00c853;
-            color: white;
-            padding: 8px 15px;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
-        .btn-delete {
-            background: #ff4444;
-            color: white;
-            padding: 8px 15px;
-            font-size: 14px;
-        }
-
-        .filter-section {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 20px;
-            background: #e0e0e0;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .reminders-list {
-            display: grid;
-            gap: 15px;
-        }
-
-        .reminder-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-
-        .reminder-card:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-
-        .reminder-card.urgent {
-            border-color: #ff4444;
-            background: #fff5f5;
-        }
-
-        .reminder-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 15px;
-        }
-
-        .reminder-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .reminder-time {
-            font-size: 1.1em;
-            color: #666;
-            margin: 10px 0;
-        }
-
-        .countdown {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #667eea;
-            margin: 10px 0;
-        }
-
-        .countdown.urgent {
-            color: #ff4444;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .reminder-message {
-            color: #666;
-            margin: 10px 0;
-            line-height: 1.6;
-        }
-
-        .reminder-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .donation-section {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .donation-section h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .donation-section p {
-            color: #555;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .btn-donate {
-            background: #0070ba;
-            color: white;
-            padding: 15px 40px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1em;
-            display: inline-block;
-            transition: all 0.3s;
-        }
-
-        .btn-donate:hover {
-            background: #005a94;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
-        .empty-state img {
-            width: 150px;
-            opacity: 0.5;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .content {
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Reminder - 100% Free</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body {font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px;}
+    .container {max-width:900px;margin:0 auto;background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);overflow:hidden;}
+    .header {background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;}
+    .header h1 {font-size:2.5em;margin-bottom:10px;}
+    .free-badge {display:inline-block;background:#00ff88;color:#000;padding:5px 15px;border-radius:20px;font-weight:bold;font-size:0.9em;margin-top:10px;}
+    .notification-banner {padding:15px;text-align:center;font-size:0.9em;display:none;}
+    .notification-banner.success {background:#4caf50;color:white;}
+    .notification-banner.warning {background:#ff9800;color:white;}
+    .trust-section {background:#f0f9ff;padding:15px;text-align:center;border-bottom:2px solid #e0e0e0;}
+    .trust-section p {color:#333;font-size:0.95em;}
+    .content {padding:30px;}
+    .form-section {background:#f8f9fa;padding:25px;border-radius:15px;margin-bottom:30px;}
+    .form-group {margin-bottom:20px;}
+    label {display:block;margin-bottom:8px;font-weight:600;color:#333;}
+    input,textarea {width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:8px;font-size:16px;transition:border 0.3s;}
+    input:focus,textarea:focus {outline:none;border-color:#667eea;}
+    textarea {resize:vertical;min-height:80px;}
+    .btn {padding:12px 30px;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
+    .btn:hover {transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+    .btn-primary {background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;width:100%;}
+    .btn-share {background:#00c853;color:white;padding:8px 15px;font-size:14px;margin-right:10px;}
+    .btn-delete {background:#ff4444;color:white;padding:8px 15px;font-size:14px;}
+    .reminders-list {display:grid;gap:15px;}
+    .reminder-card {background:white;border:2px solid #e0e0e0;border-radius:12px;padding:20px;transition:all 0.3s;}
+    .reminder-card:hover {box-shadow:0 5px 20px rgba(0,0,0,0.1);transform:translateY(-2px);}
+    .reminder-card.urgent {border-color:#ff4444;background:#fff5f5;}
+    .reminder-title {font-size:1.3em;font-weight:700;color:#333;}
+    .reminder-time {font-size:1.1em;color:#666;margin:10px 0;}
+    .countdown {font-size:1.5em;font-weight:700;color:#667eea;margin:10px 0;}
+    .countdown.urgent {color:#ff4444;animation:pulse 1s infinite;}
+    @keyframes pulse {0%,100%{opacity:1;}50%{opacity:0.7;}}
+    .reminder-message {color:#666;margin:10px 0;line-height:1.6;}
+    .reminder-actions {margin-top:15px;display:flex;gap:10px;}
+    .donation-section {background:linear-gradient(135deg,#ffd700 0%,#ffed4e 100%);padding:25px;border-radius:15px;text-align:center;margin-top:30px;}
+    .donation-section h3 {color:#333;margin-bottom:15px;}
+    .donation-section p {color:#555;margin-bottom:20px;line-height:1.6;}
+    .btn-donate {background:#0070ba;color:white;padding:15px 40px;text-decoration:none;border-radius:8px;font-weight:600;font-size:1.1em;display:inline-block;transition:all 0.3s;}
+    .btn-donate:hover {background:#005a94;transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+    .empty-state {text-align:center;padding:40px;color:#999;}
+    
+    #reminderModal {
+      display:none;
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      background:white;
+      padding:30px;
+      border-radius:20px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.3);
+      z-index:1001;
+      min-width:350px;
+      max-width:90%;
+      animation:slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {transform:translate(-50%,-60%);opacity:0;}
+      to {transform:translate(-50%,-50%);opacity:1;}
+    }
+    
+    #reminderModal h2 {
+      color:#667eea;
+      margin-bottom:20px;
+      font-size:1.8em;
+      text-align:center;
+    }
+    
+    #reminderModal .modal-content {
+      background:#f8f9fa;
+      padding:20px;
+      border-radius:10px;
+      margin-bottom:20px;
+    }
+    
+    #reminderModal .modal-title {
+      font-size:1.3em;
+      font-weight:700;
+      color:#333;
+      margin-bottom:10px;
+    }
+    
+    #reminderModal .modal-time {
+      color:#666;
+      font-size:1em;
+      margin-bottom:10px;
+    }
+    
+    #reminderModal .modal-message {
+      color:#555;
+      line-height:1.6;
+      font-style:italic;
+    }
+    
+    #reminderModal button {
+      width:100%;
+      padding:15px;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:white;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform 0.2s;
+    }
+    
+    #reminderModal button:hover {
+      transform:translateY(-2px);
+      box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    #overlay {
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.6);
+      z-index:1000;
+      backdrop-filter:blur(3px);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📅 Date Reminder</h1>
-            <p>Never forget important dates again!</p>
-            <span class="free-badge">✓ 100% FREE FOREVER</span>
-        </div>
-
-        <div class="trust-section">
-            <p>✓ No Registration Required • ✓ No Hidden Fees • ✓ Your Data Stays Private • ✓ Works Offline</p>
-        </div>
-
-        <div class="content">
-            <div class="form-section">
-                <h2 style="margin-bottom: 20px;">Create New Reminder</h2>
-                <form id="reminderForm">
-                    <div class="form-group">
-                        <label for="title">Event Title *</label>
-                        <input type="text" id="title" required placeholder="e.g., Mom's Birthday">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="datetime">Date & Time *</label>
-                        <input type="datetime-local" id="datetime" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Personal Message</label>
-                        <textarea id="message" placeholder="Add a special message..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">➕ Add Reminder</button>
-                </form>
-            </div>
-
-            <div id="remindersList" class="reminders-list">
-                <div class="empty-state">
-                    <h3>No reminders yet!</h3>
-                    <p>Create your first reminder above to get started.</p>
-                </div>
-            </div>
-
-            <div class="donation-section">
-                <h3>☕ Enjoying This Free App?</h3>
-                <p>If you find this helpful, buy me a cup of tea! ❤️</p>
-                <a href="https://paypal.me/NoorDevloper2025" target="_blank" class="btn-donate">
-                    Buy Me a Cup of Tea ☕
-                </a>
-            </div>
-        </div>
+  <div class="container">
+    <div class="header">
+      <h1>📅 Date Reminder</h1>
+      <p>Never forget important dates again!</p>
+      <span class="free-badge">✓ 100% FREE FOREVER</span>
     </div>
+    
+    <div id="notificationBanner" class="notification-banner"></div>
+    
+    <div class="trust-section">
+      <p>✓ No Registration Required • ✓ No Hidden Fees • ✓ Your Data Stays Private • ✓ Works Offline</p>
+    </div>
+    
+    <div class="content">
+      <div class="form-section">
+        <h2 style="margin-bottom:20px;">Create New Reminder</h2>
+        <form id="reminderForm">
+          <div class="form-group">
+            <label for="title">Event Title *</label>
+            <input type="text" id="title" required placeholder="e.g., Mom's Birthday">
+          </div>
+          <div class="form-group">
+            <label for="datetime">Date & Time *</label>
+            <input type="datetime-local" id="datetime">
+          </div>
+          <div class="form-group">
+            <label for="delayMinutes">Or Set Custom Delay (minutes)</label>
+            <input type="number" id="delayMinutes" min="1" placeholder="e.g., 5">
+            <small style="color:#666;">Leave blank if you prefer a specific date & time above.</small>
+          </div>
+          <div class="form-group">
+            <label for="message">Personal Message</label>
+            <textarea id="message" placeholder="Add a special message..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">➕ Add Reminder</button>
+        </form>
+      </div>
+      
+      <div id="remindersList" class="reminders-list">
+        <div class="empty-state">
+          <h3>No reminders yet!</h3>
+          <p>Create your first reminder above to get started.</p>
+        </div>
+      </div>
+      
+      <div class="donation-section">
+        <h3>☕ Enjoying This Free App?</h3>
+        <p>If you find this helpful, buy me a cup of tea!❤️</p>
+        <a href="https://paypal.me/NoorDevloper2025" target="_blank" class="btn-donate">Buy Me a Cup of Tea ☕</a>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
-        let notifiedReminders = new Set(JSON.parse(localStorage.getItem('notified')) || []);
+  <div id="overlay"></div>
+  <div id="reminderModal">
+    <h2>⏰ Reminder Alert!</h2>
+    <div class="modal-content">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-time" id="modalTime"></div>
+      <div class="modal-message" id="modalMessage"></div>
+    </div>
+    <button onclick="closeReminderModal()">Got It! ✓</button>
+  </div>
 
-        // Request notification permission
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
+  <script>
+    let reminders = [];
+    let notifiedReminders = new Set();
+    let checkInterval = null;
+
+    // Initialize on load
+    window.addEventListener('load', function() {
+      console.log('App loaded');
+      loadData();
+      requestNotificationPermission();
+      displayReminders();
+      startReminderChecker();
+    });
+
+    function loadData() {
+      try {
+        const savedReminders = localStorage.getItem('reminders');
+        const savedNotified = localStorage.getItem('notified');
+        
+        if (savedReminders) {
+          reminders = JSON.parse(savedReminders);
         }
-
-        // Loud alarm sound using Web Audio API
-        let audioContext;
-        let oscillator;
-        let gainNode;
-
-        function playAlarm() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-
-            oscillator = audioContext.createOscillator();
-            gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            oscillator.frequency.value = 800;
-            oscillator.type = 'square';
-            gainNode.gain.value = 0.3;
-
-            oscillator.start();
-            
-            // Alternate frequency for alarm effect
-            let freq = 800;
-            const interval = setInterval(() => {
-                freq = freq === 800 ? 1000 : 800;
-                oscillator.frequency.value = freq;
-            }, 200);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                oscillator.stop();
-            }, 3000);
+        if (savedNotified) {
+          notifiedReminders = new Set(JSON.parse(savedNotified));
         }
+        console.log('Loaded reminders:', reminders.length);
+      } catch (e) {
+        console.error('Error loading data:', e);
+      }
+    }
 
-        function showNotification(reminder) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                playAlarm();
-                const notification = new Notification('⏰ Reminder Alert!', {
-                    body: `${reminder.title}\n${reminder.message || 'Time for your event!'}`,
-                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">📅</text></svg>',
-                    requireInteraction: true,
-                    tag: reminder.id
-                });
+    function saveData() {
+      try {
+        localStorage.setItem('reminders', JSON.stringify(reminders));
+        localStorage.setItem('notified', JSON.stringify([...notifiedReminders]));
+      } catch (e) {
+        console.error('Error saving data:', e);
+      }
+    }
 
-                notification.onclick = () => {
-                    window.focus();
-                    notification.close();
-                };
-            }
-        }
+    function requestNotificationPermission() {
+      const banner = document.getElementById('notificationBanner');
+      
+      if (!('Notification' in window)) {
+        banner.className = 'notification-banner warning';
+        banner.textContent = '⚠️ Your browser does not support notifications';
+        banner.style.display = 'block';
+        return;
+      }
 
-        function checkReminders() {
-            const now = new Date().getTime();
-            reminders.forEach(reminder => {
-                const reminderTime = new Date(reminder.datetime).getTime();
-                const timeDiff = reminderTime - now;
-
-                if (timeDiff <= 0 && timeDiff > -60000 && !notifiedReminders.has(reminder.id)) {
-                    showNotification(reminder);
-                    notifiedReminders.add(reminder.id);
-                    localStorage.setItem('notified', JSON.stringify([...notifiedReminders]));
-                }
-            });
-        }
-
-        setInterval(checkReminders, 10000);
-        checkReminders();
-
-        document.getElementById('reminderForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const reminder = {
-                id: Date.now().toString(),
-                title: document.getElementById('title').value,
-                datetime: document.getElementById('datetime').value,
-                message: document.getElementById('message').value,
-                created: new Date().toISOString()
-            };
-
-            reminders.push(reminder);
-            localStorage.setItem('reminders', JSON.stringify(reminders));
-            
-            e.target.reset();
-            renderReminders();
-            alert('✅ Reminder added successfully!');
+      if (Notification.permission === 'granted') {
+        banner.className = 'notification-banner success';
+        banner.textContent = '✓ Push notifications enabled! You\'ll be alerted when reminders are due.';
+        banner.style.display = 'block';
+      } else if (Notification.permission === 'denied') {
+        banner.className = 'notification-banner warning';
+        banner.textContent = '⚠️ Notifications blocked. Click the lock icon in address bar to enable.';
+        banner.style.display = 'block';
+      } else {
+        Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+            banner.className = 'notification-banner success';
+            banner.textContent = '✓ Notifications enabled successfully!';
+            banner.style.display = 'block';
+          } else {
+            banner.className = 'notification-banner warning';
+            banner.textContent = '⚠️ Please enable notifications for reminders to work.';
+            banner.style.display = 'block';
+          }
         });
+      }
+    }
 
-        function getCountdown(datetime) {
-            const now = new Date().getTime();
-            const target = new Date(datetime).getTime();
-            const diff = target - now;
+    function showNotification(reminder) {
+      console.log('Showing notification for:', reminder.title);
+      
+      // Show browser notification
+      if (Notification.permission === 'granted') {
+        try {
+          const notification = new Notification('⏰ ' + reminder.title, {
+            body: reminder.message || 'Your reminder is due!',
+            icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>',
+            tag: reminder.id,
+            requireInteraction: true,
+            badge: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>'
+          });
 
-            if (diff < 0) return 'Expired';
+          notification.onclick = function() {
+            window.focus();
+            showReminderModal(reminder);
+            notification.close();
+          };
+        } catch (e) {
+          console.error('Notification error:', e);
+        }
+      }
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      // Always show modal popup
+      showReminderModal(reminder);
 
-            if (days > 0) return `${days}d ${hours}h ${minutes}m`;
-            if (hours > 0) return `${hours}h ${minutes}m`;
-            return `${minutes}m`;
+      // Play beep sound
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+      } catch (e) {
+        console.log('Audio play failed:', e);
+      }
+
+      // Mark as notified
+      if (reminder.id !== 'test') {
+        notifiedReminders.add(reminder.id);
+        saveData();
+      }
+    }
+
+    function showReminderModal(reminder) {
+      document.getElementById('modalTitle').textContent = reminder.title;
+      document.getElementById('modalTime').textContent = '📅 ' + new Date(reminder.datetime).toLocaleString();
+      document.getElementById('modalMessage').textContent = reminder.message || 'Your reminder is due!';
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('reminderModal').style.display = 'block';
+    }
+
+    function closeReminderModal() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('reminderModal').style.display = 'none';
+    }
+
+    function startReminderChecker() {
+      if (checkInterval) {
+        clearInterval(checkInterval);
+      }
+      
+      checkInterval = setInterval(function() {
+        const now = new Date();
+        
+        reminders.forEach(function(reminder) {
+          const reminderTime = new Date(reminder.datetime);
+          const timeDiff = reminderTime - now;
+
+          // Notify if time is up and not already notified
+          if (timeDiff <= 0 && timeDiff > -60000 && !notifiedReminders.has(reminder.id)) {
+            console.log('Triggering reminder:', reminder.title);
+            showNotification(reminder);
+          }
+        });
+        
+        displayReminders();
+      }, 1000);
+    }
+
+    document.getElementById('reminderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const title = document.getElementById('title').value;
+      const datetime = document.getElementById('datetime').value;
+      const delayMinutes = document.getElementById('delayMinutes').value;
+      const message = document.getElementById('message').value;
+
+      let finalDatetime;
+      if (delayMinutes) {
+        finalDatetime = new Date(Date.now() + delayMinutes * 60000).toISOString();
+      } else if (datetime) {
+        finalDatetime = new Date(datetime).toISOString();
+      } else {
+        alert('Please set either a date/time or delay in minutes.');
+        return;
+      }
+
+      const reminder = {
+        id: Date.now().toString(),
+        title: title,
+        datetime: finalDatetime,
+        message: message
+      };
+
+      reminders.push(reminder);
+      saveData();
+      
+      document.getElementById('reminderForm').reset();
+      displayReminders();
+      
+      alert('✓ Reminder created successfully!');
+    });
+
+    function displayReminders() {
+      const list = document.getElementById('remindersList');
+      
+      if (reminders.length === 0) {
+        list.innerHTML = '<div class="empty-state"><h3>No reminders yet!</h3><p>Create your first reminder above to get started.</p></div>';
+        return;
+      }
+
+      const now = new Date();
+      const html = reminders.map(function(reminder) {
+        const reminderTime = new Date(reminder.datetime);
+        const timeDiff = reminderTime - now;
+        const isUrgent = timeDiff < 3600000 && timeDiff > 0;
+        const isPast = timeDiff <= 0;
+
+        let countdownText = '';
+        if (isPast) {
+          countdownText = '⏰ TIME\'S UP!';
+        } else {
+          const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+          
+          if (days > 0) {
+            countdownText = days + 'd ' + hours + 'h ' + minutes + 'm';
+          } else if (hours > 0) {
+            countdownText = hours + 'h ' + minutes + 'm ' + seconds + 's';
+          } else {
+            countdownText = minutes + 'm ' + seconds + 's';
+          }
         }
 
-        function shareReminder(reminder) {
-            const text = `📅 Reminder: ${reminder.title}\n⏰ ${new Date(reminder.datetime).toLocaleString()}\n${reminder.message ? '💬 ' + reminder.message : ''}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: reminder.title,
-                    text: text
-                });
-            } else {
-                navigator.clipboard.writeText(text);
-                alert('✅ Reminder copied to clipboard!');
-            }
-        }
+        return '<div class="reminder-card ' + (isUrgent || isPast ? 'urgent' : '') + '">' +
+          '<div class="reminder-title">' + reminder.title + '</div>' +
+          '<div class="reminder-time">📅 ' + reminderTime.toLocaleString() + '</div>' +
+          '<div class="countdown ' + (isUrgent || isPast ? 'urgent' : '') + '">' + countdownText + '</div>' +
+          (reminder.message ? '<div class="reminder-message">💬 ' + reminder.message + '</div>' : '') +
+          '<div class="reminder-actions">' +
+            '<button class="btn btn-share" onclick="shareReminder(\'' + reminder.id + '\')">📤 Share</button>' +
+            '<button class="btn btn-delete" onclick="deleteReminder(\'' + reminder.id + '\')">🗑️ Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+      
+      list.innerHTML = html;
+    }
 
-        function deleteReminder(id) {
-            if (confirm('Are you sure you want to delete this reminder?')) {
-                reminders = reminders.filter(r => r.id !== id);
-                localStorage.setItem('reminders', JSON.stringify(reminders));
-                notifiedReminders.delete(id);
-                localStorage.setItem('notified', JSON.stringify([...notifiedReminders]));
-                renderReminders();
-            }
-        }
+    function deleteReminder(id) {
+      if (confirm('Are you sure you want to delete this reminder?')) {
+        reminders = reminders.filter(function(r) { return r.id !== id; });
+        notifiedReminders.delete(id);
+        saveData();
+        displayReminders();
+      }
+    }
 
-        function filterReminders(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.filter === filter);
-            });
-            renderReminders();
-        }
+    function shareReminder(id) {
+      const reminder = reminders.find(function(r) { return r.id === id; });
+      if (!reminder) return;
 
-        function renderReminders() {
-            const now = new Date().getTime();
-            let filtered = reminders;
+      const shareText = '📅 ' + reminder.title + '\n⏰ ' + new Date(reminder.datetime).toLocaleString() + 
+        (reminder.message ? '\n💬 ' + reminder.message : '');
 
-            filtered.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+      if (navigator.share) {
+        navigator.share({
+          title: 'Date Reminder',
+          text: shareText
+        }).catch(function(err) { 
+          console.log('Share failed:', err);
+        });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText).then(function() {
+          alert('✓ Reminder copied to clipboard!');
+        }).catch(function(err) {
+          alert('Could not copy: ' + err);
+        });
+      } else {
+        alert(shareText);
+      }
+    }
 
-            const list = document.getElementById('remindersList');
-            
-            if (filtered.length === 0) {
-                list.innerHTML = '<div class="empty-state"><h3>No reminders yet!</h3><p>Create your first reminder above to get started.</p></div>';
-                return;
-            }
-
-            list.innerHTML = filtered.map(reminder => {
-                const countdown = getCountdown(reminder.datetime);
-                const isUrgent = new Date(reminder.datetime).getTime() - now < 3600000;
-                
-                return `
-                    <div class="reminder-card ${isUrgent && countdown !== 'Expired' ? 'urgent' : ''}">
-                        <div class="reminder-header">
-                            <div>
-                                <div class="reminder-title">${reminder.title}</div>
-                                <div class="reminder-time">📅 ${new Date(reminder.datetime).toLocaleString()}</div>
-                                <div class="countdown ${isUrgent && countdown !== 'Expired' ? 'urgent' : ''}">
-                                    ⏱️ ${countdown}
-                                </div>
-                            </div>
-                        </div>
-                        ${reminder.message ? `<div class="reminder-message">💬 ${reminder.message}</div>` : ''}
-                        <div class="reminder-actions">
-                            <button class="btn btn-share" onclick="shareReminder(${JSON.stringify(reminder).replace(/"/g, '&quot;')})">📤 Share</button>
-                            <button class="btn btn-delete" onclick="deleteReminder('${reminder.id}')">🗑️ Delete</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        setInterval(renderReminders, 30000);
-        renderReminders();
-
-        // Set minimum datetime to now
-        document.getElementById('datetime').min = new Date().toISOString().slice(0, 16);
-    </script>
+    document.getElementById('overlay').addEventListener('click', closeReminderModal);
+  </script>
 </body>
 </html>
